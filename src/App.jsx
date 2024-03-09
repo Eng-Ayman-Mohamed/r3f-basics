@@ -4,6 +4,11 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import "./App.css";
 import { useRef, useState } from "react";
+import {
+  MeshWobbleMaterial,
+  OrbitControls,
+  TorusKnot,
+} from "@react-three/drei";
 
 const Cube = ({ position, size, color }) => {
   const ref = useRef();
@@ -49,7 +54,7 @@ const Sphere = ({ position, size, color }) => {
         setClicked(!clicked);
       }}
       onPointerLeave={() => {
-        setHovered(!clicked);
+        setHovered(false);
       }}
     >
       <sphereGeometry args={size} />
@@ -60,17 +65,36 @@ const Sphere = ({ position, size, color }) => {
 
 const Torus = ({ position, color, size }) => {
   const ref = useRef();
+  /*
   useFrame((state, delta) => {
     ref.current.rotation.y += delta;
     ref.current.rotation.x += delta;
     ref.current.rotation.z += delta;
 
     //ref.current.position.x = Math.cos(state.clock.elapsedTime) * 2;
-  });
+  }); */
   return (
     <mesh position={position} ref={ref}>
       <torusGeometry args={size} />
       <meshStandardMaterial color={color} />
+    </mesh>
+  );
+};
+
+const KnockTorus = ({ position, color, size }) => {
+  const ref = useRef();
+
+  /* useFrame((state, delta) => {
+    ref.current.rotation.y += delta;
+    ref.current.rotation.x += delta;
+    ref.current.rotation.z += delta;
+
+     ref.current.position.x = Math.cos(state.clock.elapsedTime) * 2; 
+  }); */
+  return (
+    <mesh position={position} ref={ref}>
+      <torusKnotGeometry args={size} />
+      <MeshWobbleMaterial color={color} factor={5} speed={3} />
     </mesh>
   );
 };
@@ -85,8 +109,15 @@ const App = () => {
         <Cube position={[-2, 0, 0]} color={"hotpink"} size={[1, 1, 1]} />
         <Cube position={[0, 0, -2]} color={"blue"} size={[1, 1, 1]} />
       </group> */}
-      <Sphere position={[0, 0, -2]} color={"hotpink"} size={[1, 30, 30]} />
-      {/*   <Torus position={[2, 0, -2]} color={"red"} size={[0.5, 0.1, 30, 30]} /> */}
+      {/*       <Sphere position={[0, 0, -2]} color={"hotpink"} size={[1, 30, 30]} />
+       */}
+      {/* <Torus position={[0, 0, -2]} color={"red"} size={[0.5, 0.1, 30, 30]} /> */}
+      <KnockTorus
+        position={[0, 0, 0]}
+        color={"red"}
+        size={[1, 0.1, 1000, 50]}
+      />
+      <OrbitControls />
     </Canvas>
   );
 };
